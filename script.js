@@ -22,6 +22,8 @@ fetch("images.json")
       results.innerHTML = "";
       list.forEach((img) => {
         const li = document.createElement("li");
+        console.log("🧠 Kuvadata:", img);
+        console.log("🔗 Kuvapolku:", `img/${img.filename}`);
         li.innerHTML = `<img src="img/${img.filename}" alt="${img.title}" title="${img.title}" />`;
         li.onclick = () => {
           full.src = `img/${img.filename}`;
