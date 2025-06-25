@@ -12,7 +12,7 @@ fetch("images.json")
   .then((data) => {
     const sorted = data.sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
     const fuse = new Fuse(sorted, {
-      keys: ["title", "description"],
+      keys: ["title", "description", "filename"],
       threshold: 0.4,
       ignoreLocation: true,
       minMatchCharLength: 2
