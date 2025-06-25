@@ -12,12 +12,11 @@ fetch("images.json")
   .then((data) => {
     const sorted = data.sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
     const fuse = new Fuse(sorted, {
-      keys: ["title", "description"],   // Hakee sekä otsikosta että kuvauksesta
-      threshold: 0.4,                   // Hyvä epätarkkuusraja (0 = tarkka, 1 = kaikki kelpaa)
-      ignoreLocation: true,            // Ei väliä missä kohtaa sana on
-      minMatchCharLength: 2            // Vähintään 2 kirjainta osumaan
+      keys: ["title", "description"],
+      threshold: 0.4,
+      ignoreLocation: true,
+      minMatchCharLength: 2
     });
-
 
     function render(list) {
       results.innerHTML = "";
@@ -28,6 +27,29 @@ fetch("images.json")
           full.src = `img/${img.filename}`;
           desc.textContent = img.description || " ";
           viewer.classList.remove("hidden");
+
+          console.log("Klikattu kuva:", img.filename);
+
+          // Näytä kommentit tälle kuvalle
+          fetch("comments.json")
+            .then(res => res.json())
+            .then(comments => {
+              const filtered = comments.filter(c => c.image === img.filename);
+              const commentBox = document.getElementById("comment-list");
+              commentBox.innerHTML = "";
+
+              if (filtered.length === 0) {
+                commentBox.textContent = "Ei vielä kommentteja tälle kuvalle.";
+              } else {
+                console.log("Kommentit löytyivät:", filtered);
+                filtered.forEach(comment => {
+                  console.log("Lisätään kommentti:", comment.message);
+                  const p = document.createElement("p");
+                  p.textContent = comment.message;
+                  commentBox.appendChild(p);
+                });
+              }
+            });
         };
         results.appendChild(li);
       });
@@ -43,33 +65,44 @@ fetch("images.json")
     });
 
     close.onclick = () => viewer.classList.add("hidden");
-    
+
     send.onclick = () => {
       const text = comment.value.trim();
-      const filename = full.src.split("/").pop(); // kuvan nimi
-      
-      if (text) {
-        fetch("https://formspree.io/f/xyzjbkjw", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            image: filename,
-            message: text
-          })
+      const filename = full.src.split("/").pop();
+
+      if (!text) return;
+
+      console.log("📤 Lähetetään Formspreen kautta...");
+
+      fetch("https://formspree.io/f/xyzjbkjw", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: text,
+          image: filename,
+          timestamp: new Date().toISOString()
         })
+      })
         .then(res => {
           if (!res.ok) throw new Error("Lähetys epäonnistui");
+          return res.json();
+        })
+        .then(() => {
+          console.log("✅ Kommentti lähetetty sähköpostilla");
           alert("Kommentti lähetetty!");
           comment.value = "";
+
+          // Näytä kommentti heti DOMissa
+          const commentBox = document.getElementById("comment-list");
+          const p = document.createElement("p");
+          p.textContent = text;
+          commentBox.appendChild(p);
         })
         .catch(err => {
-          console.error(err);
-          alert("Tallennus ei onnistunut");
+          console.error("❌ Virhe:", err);
+          alert("Lähetys ei onnistunut");
         });
-      }
     };
-
-
   });
