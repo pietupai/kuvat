@@ -7,6 +7,8 @@ const close = document.getElementById("close");
 const comment = document.getElementById("comment");
 const send = document.getElementById("send");
 
+console.log(Fuse.version);
+
 fetch("images.json")
   .then((res) => res.json())
   .then((data) => {
