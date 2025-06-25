@@ -42,12 +42,12 @@ ul#results img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  overflow-y: auto; /* sallitaan rullaus koko viewerille */
 }
 
 #viewer img {
   max-width: 90%;
-  max-height: 70vh;
+  max-height: 75vh;
 }
 
 #viewer p {
@@ -88,3 +88,32 @@ ul#results img {
 .hidden {
   display: none !important;
 }
+
+#comment-section {
+  max-height: 200px;              /* Rajoittaa korkeuden, ettei paina kuvaa alas */
+  overflow-y: auto;               /* Lisää pystysuoran scrollin jos tarpeen */
+  background-color: #fff;         /* Erottele varovasti taustasta */
+  color: #222;                    /* Tekstin väri yhteensopivaksi */
+  padding: 1rem;
+  margin-top: 1rem;
+  width: 80%;
+  max-width: 700px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#comment-list p {
+  color: #111 !important;
+  background-color: #f0f0f0 !important;
+  padding: 0.5em;
+  margin: 0.25em 0;
+  font-size: 1rem;
+  border-left: 4px solid #888;
+}
+
+#comment-list {
+  display: block;
+  min-height: 1em;
+  margin-top: 0.5em;
+}
+
