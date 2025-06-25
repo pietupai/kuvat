@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kuvagalleria</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.basic.min.js"></script>
+</head>
+<body>
+  <h1>Kuvagalleria</h1>
+  <input type="text" id="search" placeholder="Hae otsikosta..." />
+  <ul id="results"></ul>
+
+  <div id="viewer" class="hidden">
+    <span id="close">Sulje</span>
+    <img id="full" src="" alt=""/>
+    <p id="desc"></p>
+    
+    <textarea id="comment" placeholder="Kirjoita kommentti..."></textarea>
+    <button id="send">Lähetä kommentti</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
