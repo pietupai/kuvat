@@ -45,33 +45,31 @@ fetch("images.json")
     close.onclick = () => viewer.classList.add("hidden");
     
     send.onclick = () => {
-          const text = comment.value.trim();
-          if (text) {
-            // Lähetetään kommentti palvelimelle
-            fetch("/api/comments", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                filename: full.src.split("/").pop(), // kuva johon kommentti liittyy
-                comment: text
-              })
-            })
-            .then(res => {
-              if (!res.ok) throw new Error("Virhe palvelimella");
-              return res.json();
-            })
-            .then(data => {
-              alert("Kommentti lähetetty!");
-              comment.value = "";
-              console.log("Tallennettu:", data);
-            })
-            .catch(err => {
-              console.error(err);
-              alert("Tallennus epäonnistui ??");
-            });
-          }
-        };
+      const text = comment.value.trim();
+      const filename = full.src.split("/").pop(); // kuvan nimi
+      
+      if (text) {
+        fetch("https://formspree.io/f/xyzjbkjw", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            image: filename,
+            message: text
+          })
+        })
+        .then(res => {
+          if (!res.ok) throw new Error("Lähetys epäonnistui");
+          alert("Kommentti lähetetty!");
+          comment.value = "";
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Tallennus ei onnistunut");
+        });
+      }
+    };
+
 
   });
