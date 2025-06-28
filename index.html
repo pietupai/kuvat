@@ -6,16 +6,36 @@
   <title>Kuvagalleria</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.basic.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exifreader@4.12.0/dist/exif-reader.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <h1>Kuvagalleria</h1>
+  <div id="folders">
+      <button onclick="loadFolder('hyönteiset')">Hyönteiset</button>
+      <button onclick="loadFolder('käärmeet')">Käärmeet</button>
+      <button onclick="loadFolder('maisemat')">Maisemat</button>
+      <button onclick="loadFolder('muut')">Muut</button>
+      <button onclick="showAll()">Kaikki</button>
+  </div>
+  <br>
+
   <input type="text" id="search" placeholder="Hae..." />
   <ul id="results"></ul>
 
   <div id="viewer" class="hidden">
     <span id="close">Sulje</span>
-    <img id="full" src="" alt=""/>
+    <div id="viewer-body">
+        <img id="full" src="" alt="" />
+        <div id="exif-panel">
+            <button id="toggle-exif">Näytä Exif</button>
+            <div id="exif-box" class="hidden">
+              <ul id="exif-list"></ul>
+            </div>
+        </div>
+    </div>
     <p id="desc"></p>
+    <div id="image-view-counter" style="margin-top: 1em; font-size: 0.9em; color: #666;"></div>    
     
     <textarea id="comment" placeholder="Kirjoita kommentti..."></textarea>
     <button id="send">Lähetä kommentti</button>
@@ -25,6 +45,8 @@
     </div>
 
   </div>
+  <div id="overall-page-counter" style="margin-top: 1em; font-size: 0.95em; color: #555;"></div>
+  <div id="overall-view-counter"></div>
 
   <script src="script.js"></script>
 </body>
