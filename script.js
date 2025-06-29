@@ -16,6 +16,29 @@ const commentInput = document.getElementById("comment");
 
 console.log(Fuse.version);
 
+const params = new URLSearchParams(window.location.search);
+console.log("Url params:", Object.fromEntries(params.entries()));
+const commentOption = params.get('co') ?? '3'; // Kommentointi (co)
+const commentsEnabled = ["2", "3"].includes(commentOption);
+const showExistingComments = ["1", "3"].includes(commentOption);
+const showVisitorCounter = (params.get('vc') ?? '1') === '1'; // Kävijälaskurit (vc)
+const showExifData = (params.get('ex') ?? '1') === '1'; // Exif-tiedot (ex)
+if (!commentsEnabled) {
+    comment.style.display = 'none';
+    send.style.display = 'none';
+}
+if (!showExistingComments) {
+    document.getElementById('comment-section').style.display = 'none';
+}
+if (!showVisitorCounter) {
+  document.getElementById('image-view-counter').style.display = 'none';
+  document.getElementById('overall-page-counter').style.display = 'none';
+  document.getElementById('overall-view-counter').style.display = 'none';
+}
+if (!showExifData) {
+   document.getElementById('exif-panel').style.display = 'none';
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   trackPageView();
   loadPageViewCount();
