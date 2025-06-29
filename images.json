@@ -1,12 +1,5 @@
 [
   {
-    "filename": "muut/DSCN9427_muu250115.jpg",
-    "title": "Täysikuu",
-    "description": "2025 klo01 parvekkeelta",
-    "tags": ["kuu", "täysikuu"],
-    "uploaded": "2025-06-25T11:27:00Z"
-  },
-  {
     "filename": "hyönteiset/P5270774_hyont250527.JPG",
     "title": "Kertut",
     "description": "Parittelu",
@@ -25,6 +18,132 @@
     "title": "Kyykäärme",
     "description": "Kohtaaminen iltapäivällä kalliolla",
     "tags": ["kyy", "kyykäärme", "käärme", "myrkkykäärme", "matelija", "rauhoitettu"],
+    "uploaded": "2025-06-25T11:27:00Z"
+  },
+  {
+    "filename": "maisemat/DSC06770_mai091111_uutela.JPG",
+    "title": "Iltapäivän pilkahdus",
+    "description": "Skatankärjessä auringon laskiessa",
+    "tags": ["auringonlasku", "meri", "kallio", "skatanniemi"],
+    "uploaded": "2025-06-29T18:27:01Z"
+  },
+  {
+    "filename": "maisemat/DSC06994_mai091210_uutela.JPG",
+    "title": "Viimeinen kajastus",
+    "description": "Skatankärjessä auringonlaskun jälkeen",
+    "tags": ["auringonlasku", "meri", "kallio", "skatanniemi"],
+    "uploaded": "2025-06-29T18:27:02Z"
+  },
+  {
+    "filename": "maisemat/DSC00048_mai100108_uutela.JPG",
+    "title": "Keskipäivän valoa",
+    "description": "Meren jäällä",
+    "tags": ["aurinko", "meri", "jää", "hallkullanniemi"],
+    "uploaded": "2025-06-29T18:27:03Z"
+  },
+  {
+    "filename": "maisemat/DSC00133_mai100108_uutela.JPG",
+    "title": "Kärjessä",
+    "description": "Näkymä Skatankärjestä auringonlaskiessa",
+    "tags": ["auringonlasku", "meri", "jää", "skatanniemi", "huomenlahja"],
+    "uploaded": "2025-06-29T18:27:04Z"
+  },
+  {
+    "filename": "maisemat/DSC02327_mai100203_uutela.JPG",
+    "title": "Skatankärjen talvinen ranta",
+    "description": "Lumisen kallion pyöreät muodot pastellisävyissä",
+    "tags": ["auringonlasku", "meri", "jää", "lumi", "skatanniemi"],
+    "uploaded": "2025-06-29T18:27:05Z"
+  },
+  {
+    "filename": "maisemat/DSC03314_mai100218_hattusaari.JPG",
+    "title": "Hattusaaren kärjessä",
+    "description": "Lumisen kallion pyöreät muodot pastellisävyissä",
+    "tags": ["auringonlasku", "meri", "jää", "lumi", "hattusaari"],
+    "uploaded": "2025-06-29T18:27:06Z"
+  },
+  {
+    "filename": "maisemat/DSC08053_mai100318_pihlajaluoto.JPG",
+    "title": "Usvainen aamu jäällä",
+    "description": "Pitkän vaelluksen palkinto",
+    "tags": ["auringonnousu", "usva", "meri", "jää", "lumi", "pihlajaluoto"],
+    "uploaded": "2025-06-29T18:27:07Z"
+  },
+  {
+    "filename": "maisemat/DSC05249_mai100305_uutela.JPG",
+    "title": "Saaren kupeella",
+    "description": "Lumi saa valoa auringonlaskiessa",
+    "tags": ["auringonlasku", "meri", "jää", "lumi", "huomenlahja"],
+    "uploaded": "2025-06-29T18:27:08Z"
+  },
+  {
+    "filename": "maisemat/DSC04685_mai101018_uutela.JPG",
+    "title": "Kivien välissä",
+    "description": "Pilvet kiitävät",
+    "tags": ["auringonnousu", "meri", "pitkä valotus", "skatanniemi"],
+    "uploaded": "2025-06-29T18:27:09Z"
+  },  
+  {
+    "filename": "maisemat/DSC00206_mai101212_uutela.JPG",
+    "title": "Erikoiset pilvet",
+    "description": "Jään reunalla pojan kanssa",
+    "tags": ["auringonnousu", "meri", "lumi", "uutela"],
+    "uploaded": "2025-06-29T18:27:10Z"
+  }, 
+  {
+    "filename": "maisemat/DSC00219_mai101212_uutela.JPG",
+    "title": "Jääpuikot jään reunalla",
+    "description": "Lunta ja meri auki, harvinaista herkkua",
+    "tags": ["auringonnousu", "meri", "lumi", "jääpuikko", "uutela"],
+    "uploaded": "2025-06-29T18:27:11Z"
+  },
+  {
+    "filename": "maisemat/DSC03512_mai101221_uutela.JPG",
+    "title": "Lumiset muodot",
+    "description": "Keskipäivän valoa",
+    "tags": ["keskipäivä", "meri", "lumi", "uutela"],
+    "uploaded": "2025-06-29T18:27:12Z"
+  },  
+  {
+    "filename": "maisemat/DSC03525_mai101221_uutela.JPG",
+    "title": "Lumiset muodot",
+    "description": "Keskipäivän valoa",
+    "tags": ["keskipäivä", "meri", "lumi", "uutela"],
+    "uploaded": "2025-06-29T18:27:13Z"
+  },  
+  {
+    "filename": "maisemat/DSC03451_mai101221_uutela.JPG",
+    "title": "Lumiset muodot",
+    "description": "Keskipäivän valoa",
+    "tags": ["keskipäivä", "meri", "lumi", "uutela"],
+    "uploaded": "2025-06-29T18:27:14Z"
+  }, 
+  {
+    "filename": "maisemat/DSC04803_mai110102_uutela.JPG",
+    "title": "Kinokset",
+    "description": "Tuuli kinostanut lunta jäälle",
+    "tags": ["auringonnousu", "meri", "lumi", "jää", "uutela"],
+    "uploaded": "2025-06-29T18:27:15Z"
+  },    
+  {
+    "filename": "maisemat/DSC04827_mai110102_uutela.JPG",
+    "title": "Kinokset",
+    "description": "Tuuli kinostanut lunta jäälle",
+    "tags": ["auringonnousu", "meri", "lumi", "jää", "uutela"],
+    "uploaded": "2025-06-29T18:27:16Z"
+  },      
+  {
+    "filename": "maisemat/DSC07585_mai120108_uutela.JPG",
+    "title": "Purppura aamu",
+    "description": "Merisavu Skatankärjessä",
+    "tags": ["auringonnousu", "meri", "lumi", "skatanniemi"],
+    "uploaded": "2025-06-29T18:27:17Z"
+  }, 
+  {
+    "filename": "muut/DSCN9427_muu250115.jpg",
+    "title": "Täysikuu",
+    "description": "2025 Tammikuu klo01 parvekkeelta",
+    "tags": ["kuu", "täysikuu"],
     "uploaded": "2025-06-25T11:27:00Z"
   }
 ]
