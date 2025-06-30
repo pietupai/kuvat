@@ -13,6 +13,10 @@ const supabase = window.supabase.createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZXN5dHVtcm9qcm1wZGdmY3loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTgxODUsImV4cCI6MjA2NjY5NDE4NX0.IurDSJe70u4yF_NeYIGlqIt7ablt7SNVhoiMazt77BE"
 );
 const commentInput = document.getElementById("comment");
+const prev = document.getElementById("prev");
+const next = document.getElementById("next");
+let currentList = [];      // aktiivinen kuvajoukko (esim. hakutulokset, kansio...)
+let currentIndex = 0;      // aktiivinen kuvan indeksi listassa
 
 console.log(Fuse.version);
 
@@ -57,27 +61,29 @@ fetch("images.json")
       includeScore: true
     });
     
-    function openViewer(imageSrc, imgData) {
-          viewer.classList.remove("hidden");
-          full.src = imageSrc;
-          desc.textContent = imgData.description || "";
+    const params = new URLSearchParams(window.location.search);
+    const imageParam = params.get("image");
 
-          // Exif-painikkeen toiminta
-          document.getElementById("toggle-exif").onclick = () => {
-            document.getElementById("exif-list").classList.toggle("hidden");
-          };
-            
-         loadCommentsForImage(imgData.filename);
-         trackImageView(imgData.filename);
-         incrementAndShowViewCount(imgData.filename);
+    if (imageParam) {
+      const img = sorted.find(i => i.filename === imageParam);
+      if (img) {
+        currentList = sorted;
+        currentIndex = sorted.indexOf(img);
+        openViewer(`img/${img.filename}`, img);
+        loadExifFromImage(`img/${img.filename}`);
+      } else {
+        console.warn("⚠️ Kuvaa ei löytynyt:", imageParam);
+      }
     }
-
+    
     function render(list) {
       results.innerHTML = "";
       list.forEach((img) => {
         const li = document.createElement("li");
         li.innerHTML = `<img src="img/${img.filename}" alt="${img.title}" title="${img.title}" />`;
         li.onclick = () => {
+          currentList = list;              // tallennetaan tällä hetkellä näytetty kuvajoukko
+          currentIndex = list.indexOf(img); // tallennetaan mikä kuva valittiin
           openViewer(`img/${img.filename}`, img);
           loadExifFromImage(`img/${img.filename}`);
 
@@ -118,7 +124,7 @@ fetch("images.json")
     });
 
     close.onclick = () => viewer.classList.add("hidden");
-
+    
     send.onclick = () => {
       const text = comment.value.trim();
       const filename = full.src.split("/img/")[1]; 
@@ -264,7 +270,8 @@ async function incrementAndShowViewCount(filename) {
 }
 
 async function trackPageView() {
-  const res = await fetch("https://ipapi.co/json/");
+  //const res = await fetch("https://ipapi.co/json/");
+  const res = await fetch("https://ipwho.is/");
   const json = await res.json();
 
   const ip = json.ip;
@@ -297,7 +304,8 @@ async function loadPageViewCount() {
 
 async function trackImageView(filename) {
   try {
-    const res = await fetch("https://ipapi.co/json/");
+    //const res = await fetch("https://ipapi.co/json/");
+    const res = await fetch("https://ipwho.is/");
     const json = await res.json();
     const ip = json.ip;
     const userAgent = navigator.userAgent;
@@ -315,3 +323,57 @@ async function trackImageView(filename) {
     console.error("🚨 Kuvan katselun tallennus epäonnistui:", error.message);
   }
 }
+
+document.addEventListener('keydown', (e) => {
+      console.log(`keydown: ${e}`);  
+      const active = document.activeElement;
+      const isTyping = active.tagName === 'INPUT' || active.tagName === 'TEXTAREA';
+
+      if (viewer.classList.contains('hidden') || isTyping) return;
+
+      console.log(`keydown2`);  
+      if (e.key === 'ArrowRight') next.click();
+      if (e.key === 'ArrowLeft') prev.click();
+      if (e.key === 'Escape') {
+        console.log(`keydown3`);
+        close.click();
+      }
+});
+
+    function openViewer(imageSrc, imgData) {
+          viewer.classList.remove("hidden");
+          full.src = imageSrc;
+          desc.textContent = imgData.description || "";
+
+          // Exif-painikkeen toiminta
+          document.getElementById("toggle-exif").onclick = () => {
+            document.getElementById("exif-list").classList.toggle("hidden");
+          };
+            
+         loadCommentsForImage(imgData.filename);
+         trackImageView(imgData.filename);
+         incrementAndShowViewCount(imgData.filename);
+    }
+
+
+next.onclick = () => {
+  // tänne koodi seuraavan kuvan näyttämiseen
+  console.log(`next.onclick`);
+  if (currentIndex < currentList.length - 1) {
+    currentIndex++;
+    const nextImg = currentList[currentIndex];
+    openViewer(`img/${nextImg.filename}`, nextImg);
+    loadExifFromImage(`img/${nextImg.filename}`);
+  }
+};
+
+prev.onclick = () => {
+  // tänne koodi edellisen kuvan näyttämiseen
+  console.log(`prev.onclick`);
+  if (currentIndex > 0) {
+    currentIndex--;
+    const prevImg = currentList[currentIndex];
+    openViewer(`img/${prevImg.filename}`, prevImg);
+    loadExifFromImage(`img/${prevImg.filename}`);
+  }
+};
