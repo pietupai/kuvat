@@ -47,6 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
   trackPageView();
   loadPageViewCount();
   loadTotalViews(); 
+     const textarea = document.getElementById('comment');
+     textarea.addEventListener('input', () => {
+          textarea.style.height = 'auto'; // Nollaa ensin korkeus
+          textarea.style.height = textarea.scrollHeight + 'px'; // Kasvata sisällön mukaan
+     });
+
 });
 
 fetch("images.json")
@@ -325,13 +331,13 @@ async function trackImageView(filename) {
 }
 
 document.addEventListener('keydown', (e) => {
-      console.log(`keydown: ${e}`);  
+      //console.log(`keydown: ${e}`);  
       const active = document.activeElement;
       const isTyping = active.tagName === 'INPUT' || active.tagName === 'TEXTAREA';
 
       if (viewer.classList.contains('hidden') || isTyping) return;
 
-      console.log(`keydown2`);  
+      //console.log(`keydown2`);  
       if (e.key === 'ArrowRight') next.click();
       if (e.key === 'ArrowLeft') prev.click();
       if (e.key === 'Escape') {
@@ -353,6 +359,10 @@ document.addEventListener('keydown', (e) => {
          loadCommentsForImage(imgData.filename);
          trackImageView(imgData.filename);
          incrementAndShowViewCount(imgData.filename);
+         
+        const textarea = document.getElementById("comment");
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
     }
 
 
@@ -377,3 +387,4 @@ prev.onclick = () => {
     loadExifFromImage(`img/${prevImg.filename}`);
   }
 };
+
