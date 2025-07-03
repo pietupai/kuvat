@@ -102,16 +102,25 @@ ul#results img {
 }
 
 #comment-section {
-  max-height: 200px;              /* Rajoittaa korkeuden, ettei paina kuvaa alas */
-  overflow-y: auto;               /* Lisää pystysuoran scrollin jos tarpeen */
-  background-color: #fff;         /* Erottele varovasti taustasta */
-  color: #222;                    /* Tekstin väri yhteensopivaksi */
+  min-height: 120px;  
+  #max-height: calc(1.2em * 5);    /* 1.2em oletettu riviväli × 5 riviä */
+  overflow-y: auto;
+  background-color: #fff;
+  color: #222;
   padding: 1rem;
+  padding-top: 0.25rem;
   margin-top: 1rem;
   width: 80%;
   max-width: 700px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  line-height: 1.2em;             /* Varmistetaan yhteensopivuus laskentaan */
+}
+
+#comment-section h3 {
+  margin-top: 0;
+  padding-top: 0;
+  margin-bottom: 0.5em;
 }
 
 #comment-list p {
@@ -137,6 +146,7 @@ ul#results img {
   gap: 2rem;
   max-width: 90vw;
   margin-top: 2rem;
+  position: relative;
 }
 
 #viewer-body img {
@@ -205,4 +215,21 @@ ul#results img {
   font-size: 1.1rem;
   margin: 1em 0;
   color: #555;
+}
+
+.image-title-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 0.5em;
+  font-size: 1em;
+  z-index: 10;
+  pointer-events: none;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0));
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
