@@ -17,6 +17,7 @@ const prev = document.getElementById("prev");
 const next = document.getElementById("next");
 let currentList = [];      // aktiivinen kuvajoukko (esim. hakutulokset, kansio...)
 let currentIndex = 0;      // aktiivinen kuvan indeksi listassa
+let isExifVisible = false;
 
 console.log(Fuse.version);
 
@@ -47,13 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
   trackPageView();
   loadPageViewCount();
   loadTotalViews(); 
-     const textarea = document.getElementById('comment');
-     textarea.addEventListener('input', () => {
+  
+  const textarea = document.getElementById('comment');
+  textarea.addEventListener('input', () => {
           textarea.style.height = 'auto'; // Nollaa ensin korkeus
           textarea.style.height = textarea.scrollHeight + 'px'; // Kasvata sisällön mukaan
-     });
-
-});
+  });
+ });
 
 fetch("images.json")
   .then((res) => res.json())
@@ -92,11 +93,6 @@ fetch("images.json")
           currentIndex = list.indexOf(img); // tallennetaan mikä kuva valittiin
           openViewer(`img/${img.filename}`, img);
           loadExifFromImage(`img/${img.filename}`);
-
-          toggleBtn.onclick = () => {
-            const visible = exifBox.classList.toggle("hidden");
-            toggleBtn.textContent = visible ? "Näytä Exif" : "Piilota Exif";
-          };
         };
         results.appendChild(li);
       });
@@ -346,24 +342,42 @@ document.addEventListener('keydown', (e) => {
       }
 });
 
-    function openViewer(imageSrc, imgData) {
-          viewer.classList.remove("hidden");
-          full.src = imageSrc;
-          desc.textContent = imgData.description || "";
+toggleBtn.onclick = () => {
+  isExifVisible = !isExifVisible;
+  if (isExifVisible) {
+    exifBox.classList.remove("hidden");
+    toggleBtn.textContent = "Piilota Exif";
+  } else {
+    exifBox.classList.add("hidden");
+    toggleBtn.textContent = "Näytä Exif";
+  }
+};
 
-          // Exif-painikkeen toiminta
-          document.getElementById("toggle-exif").onclick = () => {
-            document.getElementById("exif-list").classList.toggle("hidden");
-          };
-            
-         loadCommentsForImage(imgData.filename);
-         trackImageView(imgData.filename);
-         incrementAndShowViewCount(imgData.filename);
-         
-        const textarea = document.getElementById("comment");
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
+function openViewer(imageSrc, imgData) {
+    viewer.classList.remove("hidden");
+    full.src = imageSrc;
+    desc.textContent = imgData.description || "";
+    //console.log("openViewer imgData sisältö:", imgData);
+    document.getElementById("image-title").textContent = imgData.title;
+
+    if (isExifVisible) {
+      exifBox.classList.remove("hidden");
+      toggleBtn.textContent = "Piilota Exif";
+    } else {
+      exifBox.classList.add("hidden");
+      toggleBtn.textContent = "Näytä Exif";
     }
+    
+    //console.log("Exif-listan sisältö:", document.getElementById("exif-list").innerHTML);
+       
+    loadCommentsForImage(imgData.filename);
+    trackImageView(imgData.filename);
+    incrementAndShowViewCount(imgData.filename);
+     
+    const textarea = document.getElementById("comment");
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+}
 
 
 next.onclick = () => {
