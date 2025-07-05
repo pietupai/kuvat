@@ -28,8 +28,9 @@ ul#results li {
 }
 
 ul#results img {
+  height: 140px;  
+  object-fit: cover;
   max-width: 100%;
-  height: auto;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
@@ -47,7 +48,7 @@ ul#results img {
 
 #viewer img {
   max-width: 90%;
-  max-height: 75vh;
+  max-height: 60vh;
 }
 
 #viewer p {
@@ -102,8 +103,6 @@ ul#results img {
 }
 
 #comment-section {
-  min-height: 120px;  
-  #max-height: calc(1.2em * 5);    /* 1.2em oletettu riviväli × 5 riviä */
   overflow-y: auto;
   background-color: #fff;
   color: #222;
@@ -115,6 +114,8 @@ ul#results img {
   border: 1px solid #ccc;
   border-radius: 6px;
   line-height: 1.2em;             /* Varmistetaan yhteensopivuus laskentaan */
+  max-height: none;
+  overflow: visible;
 }
 
 #comment-section h3 {
@@ -139,17 +140,19 @@ ul#results img {
 }
 
 #viewer-body {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;  /* ?? tämä keskittää pystysuunnassa */
-  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  display: block;    
+  text-align: center;
+  margin: 0 auto;
   max-width: 90vw;
-  margin-top: 2rem;
+  margin-top: 0rem;
   position: relative;
 }
 
 #viewer-body img {
+  display: block;
+  margin: 0 auto;
   max-width: 60vw;
   max-height: 75vh;
   object-fit: contain;
@@ -188,10 +191,10 @@ ul#results img {
 }
 
 #exif-panel {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5em;
+  align-items: center;
 }
 
 #toggle-exif {
@@ -233,3 +236,61 @@ ul#results img {
   background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0));
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
+
+#nav-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  box-sizing: border-box;
+}
+
+#nav-buttons button {
+  font-size: 2rem;
+  height: 3rem;
+  width: 3rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  #prev-arrow,
+  #next-arrow {
+    top: auto;
+    bottom: 1rem;
+    left: 2rem;
+    right: 2rem;
+    transform: none;
+    font-size: 2rem;
+    z-index: 10;
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 50%;
+  }
+  #viewer img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    margin-top: 1rem;
+  }
+  ul#results li {
+    width: 100px !important;
+    flex: 0 0 auto;
+  }
+  ul#results img {
+    height: 80px !important;
+    object-fit: cover;
+    width: 100%;
+    display: block;
+  }
+}
+
