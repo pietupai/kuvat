@@ -125,15 +125,19 @@ fetch("images.json")
       render(result);
     });
 
-    close.onclick = () => viewer.classList.add("hidden");
+    close.onclick = () => {
+      viewer.classList.add("hidden");
+      document.body.style.overflow = ""; // 🔓 Palautetaan taustasivun scrollaus
+    };
+
     
     send.onclick = () => {
       const text = comment.value.trim();
-      const filename = full.src.split("/img/")[1]; 
+      const filename = decodeURIComponent(full.src.split("/img/")[1]); 
 
       if (!text) return;
 
-      console.log("📤 Lähetetään Supabaseen...");
+      console.log("📤 Lähetetään Supabaseen...filename:", filename);
       sendComment(filename, text);
 
      };
@@ -170,6 +174,7 @@ function loadExifFromImage(url) {
 }
 
 async function sendComment(filename, text) {
+  console.log("sendComment : ", filename);
   const { error } = await supabase
     .from("comments")
     .insert([
@@ -186,17 +191,18 @@ async function sendComment(filename, text) {
   } else {
     console.log("✅ Kommentti tallennettu Supabaseen!");
     commentInput.value = ""; // tyhjennä kenttä jos käytössä
+    await loadCommentsForImage(filename);
   }
 }
 
 // Kommenttien näyttö Supabasesta
 async function loadCommentsForImage(filename) {
+  //const haku_fn = encodeURIComponent(filename);
   console.log("loadCommentsForImage : ", filename);
-  console.log("Haku käytettävällä nimellä:", encodePathOnly(filename));
   const { data: comments, error } = await supabase
     .from("comments")
     .select("message")
-    .eq("image", encodePathOnly(filename))
+    .eq("image", filename)
     .order("timestamp", { ascending: true });
     
   console.log("🔍 Supabasen vastaus:", comments);
@@ -219,12 +225,6 @@ async function loadCommentsForImage(filename) {
       commentBox.appendChild(p);
     });
   }
-}
-
-function encodePathOnly(pathWithFilename) {
-  const parts = pathWithFilename.split("/");
-  if (parts.length < 2) return encodeURIComponent(pathWithFilename);
-  return [encodeURIComponent(parts[0]), ...parts.slice(1)].join("/");
 }
 
 async function loadTotalViews() {
@@ -354,6 +354,7 @@ toggleBtn.onclick = () => {
 };
 
 function openViewer(imageSrc, imgData) {
+    document.body.style.overflow = "hidden";
     viewer.classList.remove("hidden");
     full.src = imageSrc;
     desc.textContent = imgData.description || "";
@@ -370,7 +371,12 @@ function openViewer(imageSrc, imgData) {
     
     //console.log("Exif-listan sisältö:", document.getElementById("exif-list").innerHTML);
        
-    loadCommentsForImage(imgData.filename);
+    //const haku_fn = encodeURIComponent(imgData.filename);
+    //const haku_fn = decodeURIComponent(imgData.filename);
+    const haku_fn = imgData.filename;
+    console.log("openViewer loadCommentsForImage : ", imgData.filename);
+    console.log("loadCommentsForImage haku nimellä:", haku_fn);
+    loadCommentsForImage(haku_fn);
     trackImageView(imgData.filename);
     incrementAndShowViewCount(imgData.filename);
      
