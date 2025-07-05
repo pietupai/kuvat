@@ -23,23 +23,22 @@
   <input type="text" id="search" placeholder="Hae..." />
   <ul id="results"></ul>
 
+<!-- Tämä osio näyttää kuvan -->
   <div id="viewer" class="hidden">
-    <button id="prev">←</button>
-    <button id="next">→</button>
-    <span id="close">Sulje</span>
+    <div id="nav-buttons"><button id="prev">←</button><button id="next">→</button></div>        
+    <span id="close">Sulje</span> 
     <div id="viewer-body">
-        <div style="position: relative;">
-            <img id="full" src="" alt="" />
-            <div id="image-title" class="image-title-overlay"></div>
-        </div>
-        <div id="exif-panel">
-            <button id="toggle-exif">Näytä Exif</button>
-            <div id="exif-box" class="hidden">
-              <ul id="exif-list"></ul>
-            </div>
-        </div>
+        <img id="full" src="" alt="" />
+        <div id="image-title" class="image-title-overlay"></div>
     </div>
     <p id="desc"></p>
+    <div id="exif-panel">
+        <button id="toggle-exif">Näytä Exif</button>
+        <div id="exif-box" class="hidden">
+          <ul id="exif-list"></ul>
+        </div>
+    </div>
+
     <div id="image-view-counter" style="margin-top: 1em; font-size: 0.9em; color: #666;"></div>    
     
     <div class="comment-input-wrapper">
@@ -52,6 +51,7 @@
       <div id="comment-list"></div>
     </div>
   </div>
+<!-- Tämä osio näyttää kuvan -->  
   <div id="overall-page-counter" style="margin-top: 1em; font-size: 0.95em; color: #555;"></div>
   <div id="overall-view-counter"></div>
   
