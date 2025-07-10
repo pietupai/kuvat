@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
   trackPageView();
   loadPageViewCount();
   loadTotalViews(); 
+  console.log(`Näkymän leveys on ${window.innerWidth}px`);
+  document.getElementById("resotieto").textContent = `Näkymän leveys on ${window.innerWidth}px`;
   
   const textarea = document.getElementById('comment');
   textarea.addEventListener('input', () => {
@@ -383,6 +385,7 @@ function openViewer(imageSrc, imgData) {
     const textarea = document.getElementById("comment");
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
+    
 }
 
 
