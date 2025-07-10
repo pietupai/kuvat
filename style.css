@@ -294,3 +294,48 @@ ul#results img {
   }
 }
 
+#desc {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 500px) {
+  #close {
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 20;
+  }
+
+    #nav-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  #nav-buttons button {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.4rem;
+  }
+}
+
+
+  #comment,
+  #comment-section,
+  #viewer-body {
+    width: 95%;
+    max-width: none;
+  }
+
+  ul#results li {
+    width: 80px;
+  }
+
+  ul#results img {
+    height: 60px;
+  }
+}
