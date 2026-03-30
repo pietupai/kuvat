@@ -297,7 +297,7 @@ async function trackPageView() {
 
   await supabase.from("page_views").insert([
     {
-      ip_address: ip,
+      ip: ip,
       user_agent: userAgent
     }
   ]);
@@ -325,7 +325,7 @@ async function trackImageView(filename) {
     await supabase.from("view_events").insert([
       {
         image_filename: filename,
-        ip_address: ip,
+        ip: ip,
         user_agent: userAgent
       }
     ]);
