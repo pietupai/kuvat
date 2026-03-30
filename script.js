@@ -8,7 +8,7 @@ const comment = document.getElementById("comment");
 const send = document.getElementById("send");
 const toggleBtn = document.getElementById("toggle-exif");
 const exifBox = document.getElementById("exif-box");
-const supabase = window.supabase.createClient(
+var supabase = window.supabase.createClient(
   "https://stazwtpdolwizkhqoaxx.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0YXp3dHBkb2x3aXpraHFvYXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NDQ4OTYsImV4cCI6MjA5MDQyMDg5Nn0.ZNptS0Dc2GVatO3B1EgB4FQVoKh2VuC6ONly6KiZe9E"
 );
