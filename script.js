@@ -311,7 +311,9 @@ async function loadPageViewCount() {
 async function trackImageView(filename) {
   try {
     //const res = await fetch("https://ipapi.co/json/");
-    const res = await fetch("https://ipwho.is/");
+    //const res = await fetch("https://ipwho.is/");
+    const res = await fetch("https://api.ipify.org");
+    if (!res.ok) throw new Error("IP-palvelu ei vastaa");
     const json = await res.json();
     const ip = json.ip;
     const userAgent = navigator.userAgent;
