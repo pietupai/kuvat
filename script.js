@@ -273,14 +273,23 @@ async function incrementAndShowViewCount(filename) {
   }
 }
 
-async function trackPageView() {
-  //const res = await fetch("https://ipapi.co/json/");
-  //const res = await fetch("https://ipwho.is/");
-  const res = await fetch("https://api.ipify.org");
-  if (!res.ok) throw new Error("IP-palvelu ei vastaa");
-  const json = await res.json();
+async function getIP() {
+  try {
+    //const res = await fetch("https://ipapi.co/json/");
+    //const res = await fetch("https://ipwho.is/");
+    const res = await fetch("https://api.ipify.org?format=json");
+    const json = await res.json();
+    return json.ip;
+  } catch (err) {
+    console.warn("IP-haku epäonnistui:", err);
+    return "0.0.0.0"; // Varajärjestely, jotta koodi ei kaadu
+  }
+}
 
-  const ip = json.ip;
+
+async function trackPageView() {
+  const ip = await getIP(); 
+  console.log(`Tallennetaan katselu sivulle: (IP: ${ip})`);
   const userAgent = navigator.userAgent; // 👈 tämä riviltä saadaan userAgent
 
   console.log("IP:", ip);
@@ -310,14 +319,9 @@ async function loadPageViewCount() {
 
 async function trackImageView(filename) {
   try {
-    //const res = await fetch("https://ipapi.co/json/");
-    //const res = await fetch("https://ipwho.is/");
-    const res = await fetch("https://api.ipify.org");
-    if (!res.ok) throw new Error("IP-palvelu ei vastaa");
-    const json = await res.json();
-    const ip = json.ip;
+    const ip = await getIP(); 
+    console.log(`Tallennetaan katselu kuvalle: ${filename} (IP: ${ip})`);
     const userAgent = navigator.userAgent;
-
     await supabase.from("view_events").insert([
       {
         image_filename: filename,
