@@ -8,9 +8,13 @@ const comment = document.getElementById("comment");
 const send = document.getElementById("send");
 const toggleBtn = document.getElementById("toggle-exif");
 const exifBox = document.getElementById("exif-box");
-const supabase = window.supabase.createClient(
+const supabase_old = window.supabase.createClient(
   "https://bgesytumrojrmpdgfcyh.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZXN5dHVtcm9qcm1wZGdmY3loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTgxODUsImV4cCI6MjA2NjY5NDE4NX0.IurDSJe70u4yF_NeYIGlqIt7ablt7SNVhoiMazt77BE"
+);
+const supabase = window.supabase.createClient(
+  "https://stazwtpdolwizkhqoaxx.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0YXp3dHBkb2x3aXpraHFvYXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NDQ4OTYsImV4cCI6MjA5MDQyMDg5Nn0.ZNptS0Dc2GVatO3B1EgB4FQVoKh2VuC6ONly6KiZe9E"
 );
 const commentInput = document.getElementById("comment");
 const prev = document.getElementById("prev");
