@@ -61,7 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
 fetch("images.json")
   .then((res) => res.json())
   .then((data) => {
-    const sorted = data.sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
+    // TÄMÄ RIVI KORJATTU: [...data] varmistaa, että tekstit ja kuvat pysyvät yhdessä
+    const sorted = [...data].sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
     const fuse = new Fuse(sorted, {
       keys: ["title", "description", "filename", "tags"],
       threshold: 0.4,
@@ -69,7 +70,7 @@ fetch("images.json")
       minMatchCharLength: 2,
       includeScore: true
     });
-    
+
     const params = new URLSearchParams(window.location.search);
     const imageParam = params.get("image");
 
