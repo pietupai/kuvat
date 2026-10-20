@@ -61,8 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 fetch("images.json")
   .then((res) => res.json())
   .then((data) => {
-    // TÄMÄ RIVI KORJATTU: [...data] varmistaa, että tekstit ja kuvat pysyvät yhdessä
-    const sorted = [...data].sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
+    const sorted = [data].sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
     const fuse = new Fuse(sorted, {
       keys: ["title", "description", "filename", "tags"],
       threshold: 0.4,
