@@ -279,52 +279,44 @@ async function incrementAndShowViewCount(filename) {
 }
 
 async function trackPageView() {
-  // MUUTOS: Jos nc=1, keskeytetään funktio heti eikä tehdä verkkopyyntöjä tai tietokantamerkintöjä
+  // Ladataan tilastot ruudulle JOKA TAPAUKSESSA, jotta sivusto ei mene rikki
+  await loadPageViewCount();
+
+  // MUUTOS: Estetään VAIN tietokantaan kirjoittaminen omalla katselulla
   if (blockCounters) {
-    console.log("Oma katselu (nc=1): Sivulatausta ei tilastoitu.");
-    return;
+    console.log("Oma katselu (nc=1): Sivulatausta ei lisätty tilastoihin.");
+    return; 
   }
 
-  const res = await fetch("https://ipwho.is/");
-  const json = await res.json();
+  try {
+    const res = await fetch("https://ipwho.is");
+    const json = await res.json();
+    const ip = json.ip;
+    const userAgent = navigator.userAgent;
 
-  const ip = json.ip;
-  const userAgent = navigator.userAgent;
+    console.log("IP:", ip);
+    console.log("User-Agent:", userAgent);
 
-  console.log("IP:", ip);
-  console.log("User-Agent:", userAgent);
-
-  await supabase.from("page_views").insert([
-    {
-      ip_address: ip,
-      user_agent: userAgent
-    }
-  ]);
-}
-
-async function loadPageViewCount() {
-  const { count, error } = await supabase
-    .from("page_views")
-    .select("*", { count: "exact", head: true });
-
-  if (error) {
-    console.error("Sivulaskurin lataus epäonnistui:", error.message);
-    return;
+    await supabase.from("page_views").insert([
+      {
+        ip_address: ip,
+        user_agent: userAgent
+      }
+    ]);
+  } catch (error) {
+    console.error("Sivulatauksen tallennus epäonnistui:", error.message);
   }
-
-  document.getElementById("overall-page-counter").textContent =
-    `🧭 Sivua ladattu yhteensä ${count} kertaa`;
 }
 
 async function trackImageView(filename) {
-  // MUUTOS: Jos nc=1, keskeytetään funktio heti
+  // MUUTOS: Jos nc=1, ohitetaan IP-haut ja tietokantamerkinnät, mutta EI rikki menevää logiikkaa
   if (blockCounters) {
     console.log(`Oma katselu (nc=1): Kuvan ${filename} tapahtumaa ei tallennettu.`);
     return;
   }
 
   try {
-    const res = await fetch("https://ipwho.is/");
+    const res = await fetch("https://ipwho.is");
     const json = await res.json();
     const ip = json.ip;
     const userAgent = navigator.userAgent;
@@ -340,6 +332,42 @@ async function trackImageView(filename) {
     console.log(`👁️ Kuvan katselu tallennettu: ${filename}`);
   } catch (error) {
     console.error("🚨 Kuvan katselun tallennus epäonnistui:", error.message);
+  }
+}
+
+async function incrementAndShowViewCount(filename) {
+  // 1. Hae nykyinen määrä tietokannasta (Tehdään aina, jotta lukema saadaan ruudulle!)
+  const { data, error } = await supabase
+    .from("images")
+    .select("views")
+    .eq("filename", filename)
+    .maybeSingle();
+
+  let updatedCount = data ? (data.views ?? 0) : 0;
+
+  // MUUTOS: Jos nc=1, näytetään vain tietokannasta haettu lukema sellaisenaan
+  if (blockCounters) {
+    console.log("Oma katselu (nc=1): Katselukertaa ei kasvatettu tietokannassa.");
+  } else {
+    // Tavallinen käyttäjä → kasvatetaan lukemaa ja tallennetaan
+    if (data) {
+      updatedCount = updatedCount + 1;
+      await supabase
+        .from("images")
+        .update({ views: updatedCount })
+        .eq("filename", filename);
+    } else {
+      updatedCount = 1;
+      await supabase
+        .from("images")
+        .insert([{ filename, views: updatedCount }]);
+    }
+  }
+
+  // 3. Näytä lukema isossa näkymässä (Toimii nyt aina, näytit sivua millä parametrilla tahansa)
+  const viewCounter = document.getElementById("image-view-counter");
+  if (viewCounter) {
+    viewCounter.textContent = `🔍 Tällä kuvalla ${updatedCount} katselukertaa`;
   }
 }
 
