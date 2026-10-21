@@ -8,9 +8,10 @@ const comment = document.getElementById("comment");
 const send = document.getElementById("send");
 const toggleBtn = document.getElementById("toggle-exif");
 const exifBox = document.getElementById("exif-box");
-var supabase = window.supabase.createClient(
-  "https://stazwtpdolwizkhqoaxx.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0YXp3dHBkb2x3aXpraHFvYXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NDQ4OTYsImV4cCI6MjA5MDQyMDg5Nn0.ZNptS0Dc2GVatO3B1EgB4FQVoKh2VuC6ONly6KiZe9E"
+//const 
+supabase = window.supabase.createClient(
+  "https://bgesytumrojrmpdgfcyh.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZXN5dHVtcm9qcm1wZGdmY3loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTgxODUsImV4cCI6MjA2NjY5NDE4NX0.IurDSJe70u4yF_NeYIGlqIt7ablt7SNVhoiMazt77BE"
 );
 const commentInput = document.getElementById("comment");
 const prev = document.getElementById("prev");
@@ -26,6 +27,7 @@ console.log("Url params:", Object.fromEntries(params.entries()));
 const commentOption = params.get('co') ?? '3'; // Kommentointi (co)
 const commentsEnabled = ["2", "3"].includes(commentOption);
 const showExistingComments = ["1", "3"].includes(commentOption);
+const blockCounters = params.get('nc') === '1';
 const showVisitorCounter = (params.get('vc') ?? '1') === '1'; // Kävijälaskurit (vc)
 const showExifData = (params.get('ex') ?? '1') === '1'; // Exif-tiedot (ex)
 if (!commentsEnabled) {
@@ -61,7 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
 fetch("images.json")
   .then((res) => res.json())
   .then((data) => {
-    //const sorted = [data].sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
+    //const sorted = data.sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
+    //sorted = data.sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
     const sorted = [...data].sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded));
     const fuse = new Fuse(sorted, {
       keys: ["title", "description", "filename", "tags"],
@@ -70,7 +73,7 @@ fetch("images.json")
       minMatchCharLength: 2,
       includeScore: true
     });
-
+    
     const params = new URLSearchParams(window.location.search);
     const imageParam = params.get("image");
 
@@ -240,65 +243,60 @@ async function loadTotalViews() {
 }
 
 async function incrementAndShowViewCount(filename) {
-  // 1. Hae nykyinen määrä
+  // 1. Hae nykyinen määrä tietokannasta
   const { data, error } = await supabase
     .from("images")
     .select("views")
     .eq("filename", filename)
     .maybeSingle();
 
-  let updatedCount;
+  let updatedCount = data ? (data.views ?? 0) : 0;
 
-  if (data) {
-    // Jos rivi löytyy → kasvatetaan
-    const current = data.views ?? 0;
-    updatedCount = current + 1;
-
-    await supabase
-      .from("images")
-      .update({ views: updatedCount })
-      .eq("filename", filename);
+  // MUUTOS: Jos olet omalla nc=1 -tunnuksellasi, EI kasvateta tietokantaa
+  if (blockCounters) {
+    console.log("Oma katselu (nc=1): Kuvalaskuria ei päivitetty tietokantaan.");
   } else {
-    // Jos ei löydy → luodaan rivi ja asetetaan views = 1
-    updatedCount = 1;
-
-    await supabase
-      .from("images")
-      .insert([{ filename, views: updatedCount }]);
+    // Tavallinen käyttäjä → päivitetään tietokanta
+    if (data) {
+      updatedCount = updatedCount + 1;
+      await supabase
+        .from("images")
+        .update({ views: updatedCount })
+        .eq("filename", filename);
+    } else {
+      updatedCount = 1;
+      await supabase
+        .from("images")
+        .insert([{ filename, views: updatedCount }]);
+    }
   }
 
-  // 3. Näytä lukema isossa näkymässä
+  // 3. Näytä lukema isossa näkymässä (toimii myös sinulla, näyttää vain nykyisen lukeman)
   const viewCounter = document.getElementById("image-view-counter");
   if (viewCounter) {
     viewCounter.textContent = `🔍 Tällä kuvalla ${updatedCount} katselukertaa`;
   }
 }
 
-async function getIP() {
-  try {
-    //const res = await fetch("https://ipapi.co/json/");
-    //const res = await fetch("https://ipwho.is/");
-    const res = await fetch("https://api.ipify.org?format=json");
-    const json = await res.json();
-    return json.ip;
-  } catch (err) {
-    console.warn("IP-haku epäonnistui:", err);
-    return "0.0.0.0"; // Varajärjestely, jotta koodi ei kaadu
-  }
-}
-
-
 async function trackPageView() {
-  const ip = await getIP(); 
-  console.log(`Tallennetaan katselu sivulle: (IP: ${ip})`);
-  const userAgent = navigator.userAgent; // 👈 tämä riviltä saadaan userAgent
+  // MUUTOS: Jos nc=1, keskeytetään funktio heti eikä tehdä verkkopyyntöjä tai tietokantamerkintöjä
+  if (blockCounters) {
+    console.log("Oma katselu (nc=1): Sivulatausta ei tilastoitu.");
+    return;
+  }
+
+  const res = await fetch("https://ipwho.is/");
+  const json = await res.json();
+
+  const ip = json.ip;
+  const userAgent = navigator.userAgent;
 
   console.log("IP:", ip);
   console.log("User-Agent:", userAgent);
 
   await supabase.from("page_views").insert([
     {
-      ip: ip,
+      ip_address: ip,
       user_agent: userAgent
     }
   ]);
@@ -319,14 +317,22 @@ async function loadPageViewCount() {
 }
 
 async function trackImageView(filename) {
+  // MUUTOS: Jos nc=1, keskeytetään funktio heti
+  if (blockCounters) {
+    console.log(`Oma katselu (nc=1): Kuvan ${filename} tapahtumaa ei tallennettu.`);
+    return;
+  }
+
   try {
-    const ip = await getIP(); 
-    console.log(`Tallennetaan katselu kuvalle: ${filename} (IP: ${ip})`);
+    const res = await fetch("https://ipwho.is/");
+    const json = await res.json();
+    const ip = json.ip;
     const userAgent = navigator.userAgent;
+
     await supabase.from("view_events").insert([
       {
         image_filename: filename,
-        ip: ip,
+        ip_address: ip,
         user_agent: userAgent
       }
     ]);
