@@ -160,52 +160,55 @@ function loadExifFromImage(url) {
       const exifList = document.getElementById("exif-list");
       exifList.innerHTML = "";
 
-      // 1. Kameran malli (Model)
-      if (tags["Model"]) {
-        const li = document.createElement("li");
-        li.textContent = `Model: ${tags["Model"].description || tags["Model"].value}`;
-        exifList.appendChild(li);
-      }
+      // Tarkistetaan ensin, löytyykö kuvasta LAINKAAN mitään hyödyllistä EXIF-tietoa.
+      // Jos kuva on täysin riisuttu metadata-tiedoista, mennään suoraan loppuun.
+      const hasAnyExif = ["Model", "ISOSpeedRatings", "ISO", "FNumber", "ExposureTime", "DateTimeOriginal"]
+        .some(key => tags[key] !== undefined);
 
-      // 2. ISO-arvo
-      const isoTag = tags["ISOSpeedRatings"] || tags["ISO"];
-      if (isoTag) {
-        const li = document.createElement("li");
-        li.textContent = `ISO: ${isoTag.description || isoTag.value}`;
-        exifList.appendChild(li);
-      }
-
-      // 3. 💡 KORJATTU AUKKOARVO (FNumber)
-      const fNumberLi = document.createElement("li");
-      if (tags["FNumber"]) {
-        // Otetaan arvo ja muutetaan se varmuuden vuoksi merkkijonoksi (string) sekä poistetaan tyhjät välit
-        const fValue = String(tags["FNumber"].description || tags["FNumber"].value).trim();
-        
-        // 💡 UUSI TARKISTUS: Jos arvo on "0", "0.0", "f/0" tai "f/0.0", kyseessä on manuaalilinssi
-        if (fValue === "0" || fValue === "0.0" || fValue === "f/0" || fValue === "f/0.0") {
-          fNumberLi.textContent = "FNumber: f/--";
-        } else {
-          // Jos kirjasto palauttaa pelkän numeron (esim. "8"), lisätään "f/" eteen. 
-          // Jos siinä on jo "f/8", käytetään sitä sellaisenaan.
-          fNumberLi.textContent = fValue.startsWith("f/") ? `FNumber: ${fValue}` : `FNumber: f/${fValue}`;
-        }
-      } else {
-        // Jos kenttää ei ole kuvassa lainkaan, näytetään f/--
-        fNumberLi.textContent = "FNumber: f/--";
-      }
-      exifList.appendChild(fNumberLi);
-
-      // 4. Loput kentät (Suljinaika, Päivämäärä)
-      const remainingFields = ["ExposureTime", "DateTimeOriginal"];
-      remainingFields.forEach(key => {
-        if (tags[key]) {
+      if (hasAnyExif) {
+        // 1. Kameran malli (Model)
+        if (tags["Model"]) {
           const li = document.createElement("li");
-          li.textContent = `${key}: ${tags[key].description || tags[key].value}`;
+          li.textContent = `Model: ${tags["Model"].description || tags["Model"].value}`;
           exifList.appendChild(li);
         }
-      });
 
-      // Jos listaan ei tullut mitään tietoja
+        // 2. ISO-arvo
+        const isoTag = tags["ISOSpeedRatings"] || tags["ISO"];
+        if (isoTag) {
+          const li = document.createElement("li");
+          li.textContent = `ISO: ${isoTag.description || isoTag.value}`;
+          exifList.appendChild(li);
+        }
+
+        // 3. AUKKOARVO (FNumber) – Näytetään vain jos kuva sisältää muuten EXIF-tietoja
+        const fNumberLi = document.createElement("li");
+        if (tags["FNumber"]) {
+          const fValue = String(tags["FNumber"].description || tags["FNumber"].value).trim();
+          
+          if (fValue === "0" || fValue === "0.0" || fValue === "f/0" || fValue === "f/0.0") {
+            fNumberLi.textContent = "FNumber: f/--";
+          } else {
+            fNumberLi.textContent = fValue.startsWith("f/") ? `FNumber: ${fValue}` : `FNumber: f/${fValue}`;
+          }
+        } else {
+          // Jos kuvassa on EXIF-tiedot (esim. suljinaika), mutta FNumber puuttuu (manuaalilinssi)
+          fNumberLi.textContent = "FNumber: f/--";
+        }
+        exifList.appendChild(fNumberLi);
+
+        // 4. Loput kentät (Suljinaika, Päivämäärä)
+        const remainingFields = ["ExposureTime", "DateTimeOriginal"];
+        remainingFields.forEach(key => {
+          if (tags[key]) {
+            const li = document.createElement("li");
+            li.textContent = `${key}: ${tags[key].description || tags[key].value}`;
+            exifList.appendChild(li);
+          }
+        });
+      }
+
+      // Jos kuva oli täysin tyhjä TAI listaan ei jostain syystä tullut mitään tietoja
       if (exifList.innerHTML === "") {
         exifList.innerHTML = "<li>Ei EXIF-tietoja saatavilla.</li>";
       }
