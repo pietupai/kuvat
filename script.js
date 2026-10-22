@@ -175,18 +175,22 @@ function loadExifFromImage(url) {
         exifList.appendChild(li);
       }
 
-      // 3. 💡 AUKKOARVO (FNumber) – Pakotetaan näkymään aina siististi
+      // 3. 💡 KORJATTU AUKKOARVO (FNumber)
       const fNumberLi = document.createElement("li");
       if (tags["FNumber"]) {
-        const fValue = tags["FNumber"].description || tags["FNumber"].value;
-        // Jos arvo on nolla (manuaalilinssi), näytetään f/--
-        if (fValue == 0 || fValue === "0" || fValue === "0.0") {
+        // Otetaan arvo ja muutetaan se varmuuden vuoksi merkkijonoksi (string) sekä poistetaan tyhjät välit
+        const fValue = String(tags["FNumber"].description || tags["FNumber"].value).trim();
+        
+        // 💡 UUSI TARKISTUS: Jos arvo on "0", "0.0", "f/0" tai "f/0.0", kyseessä on manuaalilinssi
+        if (fValue === "0" || fValue === "0.0" || fValue === "f/0" || fValue === "f/0.0") {
           fNumberLi.textContent = "FNumber: f/--";
         } else {
-          fNumberLi.textContent = `FNumber: ${fValue}`;
+          // Jos kirjasto palauttaa pelkän numeron (esim. "8"), lisätään "f/" eteen. 
+          // Jos siinä on jo "f/8", käytetään sitä sellaisenaan.
+          fNumberLi.textContent = fValue.startsWith("f/") ? `FNumber: ${fValue}` : `FNumber: f/${fValue}`;
         }
       } else {
-        // Jos kenttää ei ole kuvassa lainkaan, näytetään myös f/--
+        // Jos kenttää ei ole kuvassa lainkaan, näytetään f/--
         fNumberLi.textContent = "FNumber: f/--";
       }
       exifList.appendChild(fNumberLi);
