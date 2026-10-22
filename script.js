@@ -160,14 +160,14 @@ function loadExifFromImage(url) {
       const exifList = document.getElementById("exif-list");
       exifList.innerHTML = "";
 
-      // 1. Tulostetaan ensin kameran malli (Model), jos se löytyy
+      // 1. Kameran malli (Model)
       if (tags["Model"]) {
         const li = document.createElement("li");
         li.textContent = `Model: ${tags["Model"].description || tags["Model"].value}`;
         exifList.appendChild(li);
       }
 
-      // 2. Tulostetaan ISO-arvo heti toisena (haetaan molemmilla mahdollisilla avaimilla)
+      // 2. ISO-arvo
       const isoTag = tags["ISOSpeedRatings"] || tags["ISO"];
       if (isoTag) {
         const li = document.createElement("li");
@@ -175,8 +175,24 @@ function loadExifFromImage(url) {
         exifList.appendChild(li);
       }
 
-      // 3. Tulostetaan loput kentät (Aukko, Suljinaika, Päivämäärä) ISO-arvon jälkeen
-      const remainingFields = ["FNumber", "ExposureTime", "DateTimeOriginal"];
+      // 3. 💡 AUKKOARVO (FNumber) – Pakotetaan näkymään aina siististi
+      const fNumberLi = document.createElement("li");
+      if (tags["FNumber"]) {
+        const fValue = tags["FNumber"].description || tags["FNumber"].value;
+        // Jos arvo on nolla (manuaalilinssi), näytetään f/--
+        if (fValue == 0 || fValue === "0" || fValue === "0.0") {
+          fNumberLi.textContent = "FNumber: f/--";
+        } else {
+          fNumberLi.textContent = `FNumber: ${fValue}`;
+        }
+      } else {
+        // Jos kenttää ei ole kuvassa lainkaan, näytetään myös f/--
+        fNumberLi.textContent = "FNumber: f/--";
+      }
+      exifList.appendChild(fNumberLi);
+
+      // 4. Loput kentät (Suljinaika, Päivämäärä)
+      const remainingFields = ["ExposureTime", "DateTimeOriginal"];
       remainingFields.forEach(key => {
         if (tags[key]) {
           const li = document.createElement("li");
