@@ -160,7 +160,9 @@ function loadExifFromImage(url) {
       const exifList = document.getElementById("exif-list");
       exifList.innerHTML = "";
 
-      const fieldsToShow = ["Model", "FNumber", "ExposureTime", "ISO", "DateTimeOriginal"];
+      // Listataan peruskentät (ilman ISOa, koska se käsitellään erikseen)
+      const fieldsToShow = ["Model", "FNumber", "ExposureTime", "DateTimeOriginal"];
+      
       fieldsToShow.forEach(key => {
         if (tags[key]) {
           const li = document.createElement("li");
@@ -169,6 +171,15 @@ function loadExifFromImage(url) {
         }
       });
 
+      // Tarkistetaan ISO joustavasti molemmilla mahdollisilla avaimilla
+      const isoTag = tags["ISOSpeedRatings"] || tags["ISO"];
+      if (isoTag) {
+        const li = document.createElement("li");
+        li.textContent = `ISO: ${isoTag.description || isoTag.value}`;
+        exifList.appendChild(li);
+      }
+
+      // Jos listaan ei tullut mitään tietoja
       if (exifList.innerHTML === "") {
         exifList.innerHTML = "<li>Ei EXIF-tietoja saatavilla.</li>";
       }
