@@ -160,24 +160,30 @@ function loadExifFromImage(url) {
       const exifList = document.getElementById("exif-list");
       exifList.innerHTML = "";
 
-      // Listataan peruskentät (ilman ISOa, koska se käsitellään erikseen)
-      const fieldsToShow = ["Model", "FNumber", "ExposureTime", "DateTimeOriginal"];
-      
-      fieldsToShow.forEach(key => {
-        if (tags[key]) {
-          const li = document.createElement("li");
-          li.textContent = `${key}: ${tags[key].description || tags[key].value}`;
-          exifList.appendChild(li);
-        }
-      });
+      // 1. Tulostetaan ensin kameran malli (Model), jos se löytyy
+      if (tags["Model"]) {
+        const li = document.createElement("li");
+        li.textContent = `Model: ${tags["Model"].description || tags["Model"].value}`;
+        exifList.appendChild(li);
+      }
 
-      // Tarkistetaan ISO joustavasti molemmilla mahdollisilla avaimilla
+      // 2. Tulostetaan ISO-arvo heti toisena (haetaan molemmilla mahdollisilla avaimilla)
       const isoTag = tags["ISOSpeedRatings"] || tags["ISO"];
       if (isoTag) {
         const li = document.createElement("li");
         li.textContent = `ISO: ${isoTag.description || isoTag.value}`;
         exifList.appendChild(li);
       }
+
+      // 3. Tulostetaan loput kentät (Aukko, Suljinaika, Päivämäärä) ISO-arvon jälkeen
+      const remainingFields = ["FNumber", "ExposureTime", "DateTimeOriginal"];
+      remainingFields.forEach(key => {
+        if (tags[key]) {
+          const li = document.createElement("li");
+          li.textContent = `${key}: ${tags[key].description || tags[key].value}`;
+          exifList.appendChild(li);
+        }
+      });
 
       // Jos listaan ei tullut mitään tietoja
       if (exifList.innerHTML === "") {
